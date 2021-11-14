@@ -34,7 +34,7 @@ $post = get_post($_GET['post_id']);
                  <ul class="navbar-nav ms-auto py-4 py-lg-0">
                      <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="user_posts.php?user=<?php
                        // Sends you to user_posts.php where you can see all your posts
-                       echo $userinfo['uid'];
+                       echo $_SESSION['user'];
                        ?>">Profile</a></li>
                      <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="users.php">Friends</a></li>
                      <?php
@@ -147,6 +147,7 @@ $post = get_post($_GET['post_id']);
            </form>";
          }
          echo '<hr class="my-4" />';
+         echo "</div>";
          echo "<br>";
          echo "<br>";
       ?>
