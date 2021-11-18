@@ -96,18 +96,7 @@ $post = get_post($_GET['post_id']);
            echo $post['date'];
          echo '</p>';
 
-         /*if (!empty($_SESSION['user'])) {
-             if ($post['uid'] == $_SESSION['user']) {
-               echo "<form class='' action='view_post.php' method='GET'>
-               <input type='hidden' name='post_id' value='";
-               echo $pid;
-               echo "'>
-                 <input type='submit' name='' value='Edit post'>
-               </form>";
-             }
-           }*/
-
-         $cids = get_cids_by_pid($pid);
+         $cids = get_cids_by_pid($post['pid']);
          foreach($cids as $cid) {
            $comment = get_comment($cid);
            echo '<hr class="md-5" />';
@@ -139,7 +128,7 @@ $post = get_post($_GET['post_id']);
              <div class='form-group'>
                <input class='form-control' type='text' name='new_comment_content' value=''>
                <input type='hidden' name='new_comment_pid' value='";
-               echo $pid;
+               echo $post['pid'];
                echo "'>
              </div>
              <br>

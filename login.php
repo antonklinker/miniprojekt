@@ -24,7 +24,7 @@ if (isset($_POST['username']) && isset($_POST['password'])) {
 if (isset($_POST['fname']) && isset($_POST['lname'])
 && isset($_POST['newusrname']) && isset($_POST['newpasswrd'])) {
     // CHECKS IF USERNAME AND PASSWORD IS CORRECT
-    if (add_user($_POST['newusrname'], $_POST['fname'], $_POST['lname'], $_POST['newpasswrd'])) {
+    if (add_user(htmlentities($_POST['newusrname']), htmlentities($_POST['fname']), htmlentities($_POST['lname']), htmlentities($_POST['newpasswrd']))) {
       header('Location:signup.php');
       exit;
     }

@@ -7,9 +7,8 @@
     header('Location:login.php');
     exit;
   }*/
-  // GETS ALL INFO ABOUT THE LOGGED IN USER
-  $userinfo = get_user($_SESSION['user']);
 
+  // Gets all existing post id
   $pids = get_pids();
 
   // Sorting the posts in descending order (meaning most recent post will be displayed first)
@@ -78,6 +77,9 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
           <div class="col-md-10 col-lg-8 col-xl-7">
 <?php
+    // Creates a form that allows users to create new posts.
+    // accept="image/*" ensures that the user only can add images.
+    // Done inside php since this form is only visible if the user is logged in.
     if (!empty($_SESSION['user'])) {
     echo '
     <form action="create_post.php" method="post" enctype="multipart/form-data">
@@ -101,22 +103,29 @@
       echo '<hr class="my-5" />';
     }
 
-
+    // Runs through every id of every post
   foreach($pids as $pid) {
     echo '<div class="post-preview">';
+      // Retrieves information about the post.
       $post = get_post($pid);
+      // Makes the post clickable which will send the user to the view_post.php page
       echo '<a href="view_post.php?post_id=';
         echo $pid;
         echo '">';
+        // Echos the title
         echo '<h2 class="post-title">';
         echo $post['title'];
         echo '</h2>';
+        // Echos the content
         echo '<h3 class="post-subtitle">';
         echo $post['content'];
         echo "</h3>";
       echo "</a>";
 
+      // Retrieves all images attached to the respective posts
   $iids = get_iids_by_pid($pid);
+
+  // A nested loop which will display all images for each post
   foreach($iids as $iid) {
     $image = get_image($iid);
     echo '<div class="col-md-10 col-lg-8 col-xl-7">';
@@ -126,6 +135,7 @@
     echo '</div>';
   }
 
+// Simply shows who made the post and when it was made
   echo '<p class="post-meta">
         Posted by
           <a href="user_posts.php?user=';
@@ -137,17 +147,8 @@
       echo $post['date'];
     echo '</p>';
 
-    /*if (!empty($_SESSION['user'])) {
-        if ($post['uid'] == $_SESSION['user']) {
-          echo "<form class='' action='view_post.php' method='GET'>
-          <input type='hidden' name='post_id' value='";
-          echo $pid;
-          echo "'>
-            <input type='submit' name='' value='Edit post'>
-          </form>";
-        }
-      }*/
-
+// Same principle as $iids above.
+// It's a nested loop which displays every comment made for every post
     $cids = get_cids_by_pid($pid);
     foreach($cids as $cid) {
       $comment = get_comment($cid);
@@ -163,8 +164,13 @@
         echo '</a>
           on ';
           echo $comment['date'];
+
+          // Checks whether or not you are logged in
           if (!empty($_SESSION['user'])) {
+            // If you are logged in, this checks if you made the post or if you made the comment
             if ($comment['uid'] == $_SESSION['user'] || $post['uid'] == $_SESSION['user']) {
+              // If either of above is true, you will be able to delete the comment.
+              // The comment is deleted by referring you to delete_comment.php with the related comment id
               echo "<form class='' action='delete_comment.php' method='POST'>
               <input type='hidden' name='comment_id' value='";
               echo $cid;
@@ -175,8 +181,12 @@
           }
         echo '</p>';
     }
+
+    // Allows you to create a comment if you are logged in.
+    // Comments are created by referring you to create_comment.php
     if (!empty($_SESSION['user'])) {
-      echo "<form class='' action='create_comment.php' method='POST'>
+      echo
+      "<form class='' action='create_comment.php' method='POST'>
         <div class='form-group'>
           <input class='form-control' type='text' name='new_comment_content' value=''>
           <input type='hidden' name='new_comment_pid' value='";

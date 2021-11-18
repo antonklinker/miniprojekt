@@ -69,9 +69,30 @@ $selectedUser = $_GET['user'];
          <div class="row gx-4 gx-lg-5 justify-content-center">
            <div class="col-md-10 col-lg-8 col-xl-7">
      <?php
+     // Checks if you are logged in
+     if ($selectedUser!='') {
+       echo '<div class="post-preview">';
+         echo '<p class="post-meta" style="text-align: center; margin-bottom: 1px;">';
+           echo 'all posts made by';
+         echo '</p>';
+        echo '<h2 class="post-title" style="text-align: center; font-size: 80px">';
+          echo $selectedUser;
+        echo '</h1>';
+      echo "</div>";
+      echo "<br>";
+      echo "<br>";
      $pids = get_pids_by_uid($selectedUser);
-     foreach ($pids as $pid) {
 
+     if (count($pids)==0) {
+       echo '<div class="post-preview">';
+        echo '<h2 class="post-title" style="text-align: center">';
+          echo 'This user has not made any posts yet';
+        echo '</h2>';
+      echo "</div>";
+      echo "<br>";
+     }
+
+     foreach ($pids as $pid) {
        $post = get_post($pid);
        echo '<div class="post-preview">';
        echo '<a href="view_post.php?post_id=';
@@ -89,11 +110,20 @@ $selectedUser = $_GET['user'];
                echo '">';
                echo $post['uid'];
          echo '</a>
-           on ';
+         on ';
            echo $post['date'];
          echo '</p>';
        echo "</div>";
        echo '<hr class="my-4" />';
+      }
+     } else {
+       // If you are not logged in
+       echo '<div class="post-preview">';
+        echo '<h2 class="post-title" style="text-align: center">';
+          echo 'You are not logged in';
+        echo '</h2>';
+      echo "</div>";
+      echo "<br>";
      } ?>
 
    </div>
